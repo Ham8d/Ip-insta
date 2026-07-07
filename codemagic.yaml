@@ -1,0 +1,36 @@
+workflows:
+  tiraath-tweak:
+    name: TiraathIP Tweak Build
+    max_build_duration: 30
+    environment:
+      vars:
+        THEOS: /opt/theos
+        THEOS_DEVICE_IP: ""
+    scripts:
+      - name: Install Dependencies
+        script: |
+          brew install ldid dpkg
+          
+      - name: Install Theos
+        script: |
+          if [ ! -d "$THEOS" ]; then
+            sudo mkdir -p $THEOS
+            sudo chown $(whoami) $THEOS
+            git clone --recursive https://github.com/theos/theos.git $THEOS
+          fi
+          
+      - name: Download iOS SDK
+        script: |
+          if [ ! -d "$THEOS/sdks/iPhoneOS16.5.sdk" ]; then
+            curl -LO https://github.com/theos/sdks/releases/download/latest/iPhoneOS16.5.sdk.tar.xz
+            tar -xJf iPhoneOS16.5.sdk.tar.xz -C $THEOS/sdks/
+          fi
+          
+      - name: Build Tweak
+        script: |
+          make clean
+          make package FINALPACKAGE=1
+          
+    artifacts:
+      - packages/*.deb
+      - .theos/obj/debug/TiraathIP.dylib
