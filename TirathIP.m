@@ -348,8 +348,7 @@ static BOOL      gDone       = NO;
     // رسالة تأكيد
     UIAlertController *alert = [UIAlertController
         alertControllerWithTitle:@"✅ تم التغيير"
-                         message:[NSString stringWithFormat:@"UUID جديد:
-%@", uuid]
+                         message:[NSString stringWithFormat:@"UUID جديد:\n%@", uuid]
                   preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"حسناً" style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
