@@ -31,8 +31,11 @@ workflows:
 
       - name: Build Tweak
         script: |
+          PROJ=$(find . -name "Makefile" ! -path "*theos*" | head -1 | xargs dirname)
+          echo "Building in: $PROJ"
+          cd "$PROJ"
           make clean
           make
 
     artifacts:
-      - .theos/obj/debug/*.dylib
+      - "**/.theos/obj/debug/*.dylib"
