@@ -1,0 +1,9 @@
+Package: com.tiraath.changeip
+Name: TiraathIP
+Version: 1.0
+Architecture: iphoneos-arm64
+Description: Tiraath IP & ID Changer - IDFV, IDFA, Keychain
+Maintainer: ham8d1
+Author: ham8d1
+Section: Tweaks
+Depends: mobilesubstrate | substitute | libhooker
