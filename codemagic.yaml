@@ -5,7 +5,6 @@ workflows:
     environment:
       vars:
         THEOS: /opt/theos
-        THEOS_DEVICE_IP: ""
     scripts:
       - name: Install Dependencies
         script: |
