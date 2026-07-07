@@ -5,11 +5,12 @@ workflows:
     environment:
       vars:
         THEOS: /opt/theos
+
     scripts:
       - name: Install Dependencies
         script: |
-          brew install ldid dpkg
-          
+          brew install ldid dpkg xz
+
       - name: Install Theos
         script: |
           if [ ! -d "$THEOS" ]; then
@@ -17,19 +18,21 @@ workflows:
             sudo chown $(whoami) $THEOS
             git clone --recursive https://github.com/theos/theos.git $THEOS
           fi
-          
-      - name: Download iOS SDK
+
+      - name: Link iOS SDK from Xcode
         script: |
-          if [ ! -d "$THEOS/sdks/iPhoneOS16.5.sdk" ]; then
-            curl -LO https://github.com/theos/sdks/releases/download/latest/iPhoneOS16.5.sdk.tar.xz
-            tar -xJf iPhoneOS16.5.sdk.tar.xz -C $THEOS/sdks/
+          mkdir -p $THEOS/sdks
+          SDKPATH=$(xcrun --sdk iphoneos --show-sdk-path)
+          SDKNAME=$(basename "$SDKPATH")
+          if [ ! -e "$THEOS/sdks/$SDKNAME" ]; then
+            ln -sf "$SDKPATH" "$THEOS/sdks/$SDKNAME"
           fi
-          
+          echo "Using SDK: $SDKNAME"
+
       - name: Build Tweak
         script: |
           make clean
-          make package FINALPACKAGE=1
-          
+          make
+
     artifacts:
-      - packages/*.deb
-      - .theos/obj/debug/TiraathIP.dylib
+      - .theos/obj/debug/*.dylib
